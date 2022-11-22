@@ -184,6 +184,7 @@ public class RoleManagerImpl implements RoleManager {
     SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(language.getText("resAnalysis"), 8);
     SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(language.getText("resWebDesigner"), 9);
     SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(language.getText("resNoSpecificRole"), 10);
+    SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(language.getText("customRole"), 11);
     DEFAULT_ROLE_SET.clear();
     DEFAULT_ROLE_SET.createRole(language.getText("resUndefined"), 0);
     DEFAULT_ROLE_SET.createRole(language.getText("resProjectManager"), 1);
