@@ -52,21 +52,6 @@ public class TaskNode extends DefaultMutableTreeTableNode {
   }
 
   /**
-   * Sets if the task has overallocated resources associated with it or not.
-   *
-   * @param areOverallocated
-   *          The boolean value to be set.
-   */
-  public void setOverallocatedResources(boolean areOverallocatedResources) {
-    task.setOverallocatedResources(areOverallocatedResources);
-  }
-
-  /** @return true if the task has overallocated resources associated with it and false otherwise. */
-  public String getOverallocatedResources() {
-    return task.getOverallocatedResources();
-  }
-
-  /**
    * Sets the name of the task.
    * 
    * @param newName

@@ -29,9 +29,6 @@ import biz.ganttproject.core.time.TimeDuration;
  * @author bard
  */
 public interface MutableTask {
-
-  void setOverallocatedResources(boolean areOverallocatedResources);
-
   void setName(String name);
 
   void setMilestone(boolean isMilestone);
