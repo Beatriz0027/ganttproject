@@ -110,6 +110,8 @@ public interface Task extends MutableTask {
   // main properties
   int getTaskID();
 
+  boolean getOverallocatedResources();
+
   String getName();
 
   boolean isMilestone();

@@ -46,6 +46,7 @@ public class GanttTask extends TaskImpl implements Serializable {
   public GanttTask(String name, GanttCalendar start, long length, TaskManagerImpl taskManager, int taskID) {
     super(taskManager, taskID);
     TaskMutator mutator = createMutator();
+    mutator.setOverallocatedResources(false);
     mutator.setName(name);
     mutator.setStart(start);
     mutator.setDuration(taskManager.createLength(length));
