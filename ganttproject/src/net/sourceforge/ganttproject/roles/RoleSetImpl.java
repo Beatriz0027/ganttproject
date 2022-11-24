@@ -24,6 +24,10 @@ import java.util.ArrayList;
  * @author bard
  */
 public class RoleSetImpl implements RoleSet {
+  //Variaveis novas
+
+  private Role currRole;
+
   private final String myName;
 
   private final ArrayList<RoleImpl> myRoles = new ArrayList<RoleImpl>();
@@ -77,7 +81,9 @@ public class RoleSetImpl implements RoleSet {
     Role role = findRole(roleID);
     if (role != null) {
       role.setName(name);
+      this.currRole = role;
     }
+
   }
 
   @Override
@@ -91,6 +97,10 @@ public class RoleSetImpl implements RoleSet {
       }
     }
     return result;
+  }
+
+  public Role getCurrRole() {
+    return this.currRole;
   }
 
   @Override

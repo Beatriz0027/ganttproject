@@ -189,6 +189,7 @@ public class RoleManagerImpl implements RoleManager {
     DEFAULT_ROLE_SET.createRole(language.getText("resUndefined"), 0);
     DEFAULT_ROLE_SET.createRole(language.getText("resProjectManager"), 1);
     DEFAULT_ROLE_SET.setEnabled(true);
+    //System.err.println("ABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: " + DEFAULT_ROLE_SET.getCurrRole());
   }
 
   private void changeRoleSet() {

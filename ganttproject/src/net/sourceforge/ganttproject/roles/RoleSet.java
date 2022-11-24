@@ -23,6 +23,8 @@ public interface RoleSet {
 
   void changeRole(String name, int roleID);
 
+  Role getCurrRole();
+
   Role findRole(int roleID);
 
   boolean isEnabled();

@@ -72,7 +72,9 @@ public class GanttDialogPerson {
     Role[] enabledRoles = RoleManager.Access.getInstance().getEnabledRoles();
     String[] roleFieldValues = new String[enabledRoles.length];
     for (int i = 0; i < enabledRoles.length; i++) {
+      // Lista com os valores relativos aos Roles.
       roleFieldValues[i] = enabledRoles[i].getName();
+      //roleFieldValues[i] = "Jardineiro";
     }
     myRoleField = new DefaultEnumerationOption<Object>("colRole", roleFieldValues);
     myGroup = new GPOptionGroup("", new GPOption[] { myNameField, myPhoneField, myMailField, myRoleField });
@@ -107,6 +109,38 @@ public class GanttDialogPerson {
     }
   }
 
+  public void setVisible2(boolean isVisible) {
+    if (isVisible) {
+      loadFields2();
+      Component contentPane = getComponent2();
+      OkAction okAction = new OkAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          myGroup.commit();
+          okButtonActionPerformed();
+        }
+      };
+      CancelAction cancelAction = new CancelAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          myGroup.rollback();
+          change = false;
+        }
+      };
+      myUIFacade.createDialog(contentPane, new Action[] { okAction, cancelAction }, language.getCorrectedLabel("human")).show();
+    }
+  }
+
+  private void loadFields2() {
+    myNameField.setValue(person.getName());
+    myPhoneField.setValue(person.getPhone());
+    myMailField.setValue(person.getMail());
+    Role role = person.getRole();
+    if (role != null) {
+      myRoleField.setValue(role.getName());
+    }
+  }
+
   private void loadFields() {
     myNameField.setValue(person.getName());
     myPhoneField.setValue(person.getPhone());
@@ -123,6 +157,7 @@ public class GanttDialogPerson {
     OptionsPageBuilder.I18N i18n = new OptionsPageBuilder.I18N() {
       @Override
       public String getOptionLabel(GPOptionGroup group, GPOption<?> option) {
+        //System.err.println("My Option: " + getValue(getCanonicalOptionLabelKey(option)));
         return getValue(option.getID());
       }
     };
@@ -182,6 +217,37 @@ public class GanttDialogPerson {
     return tabbedPane;
   }
 
+  private Component getComponent2() {
+    OptionsPageBuilder builder = new OptionsPageBuilder();
+    OptionsPageBuilder.I18N i18n = new OptionsPageBuilder.I18N() {
+      @Override
+      public String getOptionLabel(GPOptionGroup group, GPOption<?> option) {
+        //System.err.println("My Option: " + getValue(getCanonicalOptionLabelKey(option)));
+        return getValue(option.getID());
+      }
+    };
+    builder.setI18N(i18n);
+    final JComponent mainPage = builder.buildPlanePage(new GPOptionGroup[] { myGroup });
+    mainPage.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    tabbedPane = new JTabbedPane();
+    tabbedPane.addTab(language.getText("general"), new ImageIcon(getClass().getResource("/icons/properties_16.gif")),
+        mainPage);
+    tabbedPane.addFocusListener(new FocusAdapter() {
+      boolean isFirstTime = true;
+
+      @Override
+      public void focusGained(FocusEvent e) {
+        if (isFirstTime) {
+          mainPage.requestFocus();
+          isFirstTime = false;
+        }
+        super.focusGained(e);
+      }
+
+    });
+    return tabbedPane;
+  }
+
   private void okButtonActionPerformed() {
     if (person.getId() != -1) {
       // person ID is -1 when it is new one
@@ -204,7 +270,9 @@ public class GanttDialogPerson {
     person.setPhone(myPhoneField.getValue());
     Role role = findRole(myRoleField.getValue());
     if (role != null) {
+      //if (role.getName().equals())
       person.setRole(role);
+      //System.err.println("Current Role: " + role.getID());
     }
     person.getDaysOff().clear();
     for (DateInterval interval : myDaysOffModel.getIntervals()) {
@@ -215,10 +283,17 @@ public class GanttDialogPerson {
     // anymore...)
   }
 
+  
+
   private Role findRole(String roleName) {
     Role[] enabledRoles = RoleManager.Access.getInstance().getEnabledRoles();
     for (Role enabledRole : enabledRoles) {
       if (enabledRole.getName().equals(roleName)) {
+        if (enabledRole.getID() == 11) {
+            // Comecei a fazer o Sistema aqui.
+            System.err.println("Is this it : " + enabledRole);
+            setVisible2(true);
+        }
         return enabledRole;
       }
     }
