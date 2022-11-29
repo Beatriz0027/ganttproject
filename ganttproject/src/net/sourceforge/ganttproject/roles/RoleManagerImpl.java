@@ -171,6 +171,13 @@ public class RoleManagerImpl implements RoleManager {
     }
   }
 
+  // Adiciona um role novo a lista de roles existentes.
+  public void addRole(String name) {
+    int lastId = 0;
+    Role[] roles = SOFTWARE_DEVELOPMENT_ROLE_SET.getRoles();
+    SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(name, roles.length+1);
+  }
+
   private void createRoleSet() {
     GanttLanguage language = GanttLanguage.getInstance();
 
@@ -204,6 +211,7 @@ public class RoleManagerImpl implements RoleManager {
     SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("resAnalysis"), 8);
     SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("resWebDesigner"), 9);
     SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("resNoSpecificRole"), 10);
+    SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(language.getText("customRole"), 11);
     DEFAULT_ROLE_SET.changeRole(language.getText("resUndefined"), 0);
     DEFAULT_ROLE_SET.changeRole(language.getText("resProjectManager"), 1);
   }

@@ -57,9 +57,11 @@ public class GanttDialogPerson {
   private final StringOption myNameField = new DefaultStringOption("name");
   private final StringOption myPhoneField = new DefaultStringOption("colPhone");
   private final StringOption myMailField = new DefaultStringOption("colMail");
+  private final StringOption myTestField = new DefaultStringOption("colRole");
   private final MoneyOption myStandardRateField = new DefaultMoneyOption("colStandardRate");
   private final EnumerationOption myRoleField;
   private final GPOptionGroup myGroup;
+  private final GPOptionGroup myGroup2;
   private GPOptionGroup myRateGroup;
   private final UIFacade myUIFacade;
   private final CustomPropertyManager myCustomPropertyManager;
@@ -79,6 +81,8 @@ public class GanttDialogPerson {
     myRoleField = new DefaultEnumerationOption<Object>("colRole", roleFieldValues);
     myGroup = new GPOptionGroup("", new GPOption[] { myNameField, myPhoneField, myMailField, myRoleField });
     myGroup.setTitled(false);
+    myGroup2 = new GPOptionGroup("", new GPOption[] { myTestField });
+    myGroup2.setTitled(false);
 
     myRateGroup = new GPOptionGroup("resourceRate", myStandardRateField);
   }
@@ -116,14 +120,14 @@ public class GanttDialogPerson {
       OkAction okAction = new OkAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          myGroup.commit();
-          okButtonActionPerformed();
+          myGroup2.commit();
+          okButtonActionPerformed2();
         }
       };
       CancelAction cancelAction = new CancelAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          myGroup.rollback();
+          myGroup2.rollback();
           change = false;
         }
       };
@@ -137,7 +141,7 @@ public class GanttDialogPerson {
     myMailField.setValue(person.getMail());
     Role role = person.getRole();
     if (role != null) {
-      myRoleField.setValue(role.getName());
+      myTestField.setValue(role.getName());
     }
   }
 
@@ -157,7 +161,6 @@ public class GanttDialogPerson {
     OptionsPageBuilder.I18N i18n = new OptionsPageBuilder.I18N() {
       @Override
       public String getOptionLabel(GPOptionGroup group, GPOption<?> option) {
-        //System.err.println("My Option: " + getValue(getCanonicalOptionLabelKey(option)));
         return getValue(option.getID());
       }
     };
@@ -222,12 +225,11 @@ public class GanttDialogPerson {
     OptionsPageBuilder.I18N i18n = new OptionsPageBuilder.I18N() {
       @Override
       public String getOptionLabel(GPOptionGroup group, GPOption<?> option) {
-        //System.err.println("My Option: " + getValue(getCanonicalOptionLabelKey(option)));
         return getValue(option.getID());
       }
     };
     builder.setI18N(i18n);
-    final JComponent mainPage = builder.buildPlanePage(new GPOptionGroup[] { myGroup });
+    final JComponent mainPage = builder.buildPlanePage(new GPOptionGroup[] { myGroup2 });
     mainPage.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     tabbedPane = new JTabbedPane();
     tabbedPane.addTab(language.getText("general"), new ImageIcon(getClass().getResource("/icons/properties_16.gif")),
@@ -263,6 +265,21 @@ public class GanttDialogPerson {
     }
     change = true;
   }
+  private void okButtonActionPerformed2() {
+    if (person.getId() != -1) {
+      // person ID is -1 when it is new one
+      // i.e. before the Person dialog is closed
+      myUIFacade.getUndoManager().undoableEdit("Resource properties changed", new Runnable() {
+        @Override
+        public void run() {
+          applyChanges2();
+        }
+      });
+    } else {
+      applyChanges2();
+    }
+    change = true;
+  }
 
   private void applyChanges() {
     person.setName(myNameField.getValue());
@@ -270,9 +287,7 @@ public class GanttDialogPerson {
     person.setPhone(myPhoneField.getValue());
     Role role = findRole(myRoleField.getValue());
     if (role != null) {
-      //if (role.getName().equals())
       person.setRole(role);
-      //System.err.println("Current Role: " + role.getID());
     }
     person.getDaysOff().clear();
     for (DateInterval interval : myDaysOffModel.getIntervals()) {
@@ -283,6 +298,25 @@ public class GanttDialogPerson {
     // anymore...)
   }
 
+  private void applyChanges2() {
+    person.setName(myNameField.getValue());
+    person.setMail(myMailField.getValue());
+    person.setPhone(myPhoneField.getValue());
+    if (myTestField.getValue() != null) {
+      createRole(myTestField.getValue());
+      Role role = findRole(myTestField.getValue());
+      System.err.println(role);
+      if (role != null) {
+        person.setRole(role);
+      }
+    }
+    person.getDaysOff().clear();
+    for (DateInterval interval : myDaysOffModel.getIntervals()) {
+      person.addDaysOff(new GanttDaysOff(interval.start, interval.getEnd()));
+    }
+    person.setStandardPayRate(myStandardRateField.getValue());
+  }
+
   
 
   private Role findRole(String roleName) {
@@ -291,13 +325,16 @@ public class GanttDialogPerson {
       if (enabledRole.getName().equals(roleName)) {
         if (enabledRole.getID() == 11) {
             // Comecei a fazer o Sistema aqui.
-            System.err.println("Is this it : " + enabledRole);
             setVisible2(true);
         }
         return enabledRole;
       }
     }
     return null;
+  }
+
+  private void createRole(String roleName) {
+    RoleManager.Access.getInstance().addRole(roleName);
   }
 
   private DefaultDateIntervalModel myDaysOffModel;

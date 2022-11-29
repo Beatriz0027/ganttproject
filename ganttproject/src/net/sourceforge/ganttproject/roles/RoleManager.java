@@ -29,6 +29,8 @@ public interface RoleManager {
 
   public RoleSet[] getRoleSets();
 
+  void addRole(String name);
+
   /** Clear the role list */
   public void clear();
 
