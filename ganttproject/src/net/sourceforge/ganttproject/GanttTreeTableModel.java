@@ -76,6 +76,7 @@ public class GanttTreeTableModel extends DefaultTreeTableModel implements TableC
   private static class Icons {
     static ImageIcon ALERT_TASK_INPROGRESS = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/alert1_16.gif"));
     static ImageIcon ALERT_TASK_OUTDATED = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/alert2_16.gif"));
+    static ImageIcon OVERALLOCATED_RESOURCES = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/overallocated.gif"));
   }
   static Predicate<Task> NOT_SUPERTASK = new Predicate<Task>() {
     @Override
@@ -264,7 +265,9 @@ public class GanttTreeTableModel extends DefaultTreeTableModel implements TableC
         break;
       case INFO:
         // TODO(dbarashev): implement alerts some other way
-        if (t.getCompletionPercentage() < 100) {
+        if (1 > 0) {  // TODO
+          res = Icons.OVERALLOCATED_RESOURCES;
+        } else if (t.getCompletionPercentage() < 100) {
           Calendar c = GanttCalendar.getInstance();
           if (t.getStart().before(c)) {
             res = Icons.ALERT_TASK_INPROGRESS;
