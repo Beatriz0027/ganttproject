@@ -74,6 +74,8 @@ public class TaskImpl implements Task {
 
   private final TaskManagerImpl myManager;
 
+  private boolean areOverallocatedResources = false;
+
   private String myName;
 
   private String myWebLink = "";
@@ -473,6 +475,15 @@ public class TaskImpl implements Task {
   }
 
   @Override
+  public void getOverallocatedResources() {
+    ResourceAssignment[] assignments = this.getAssignments();
+
+    for (int i = 0; i < assignments.length; i++) {
+      System.out.println(assignments[i].getLoad());
+    }
+  }
+
+  @Override
   public ResourceAssignmentCollection getAssignmentCollection() {
     return myAssignments;
   }
@@ -684,6 +695,16 @@ public class TaskImpl implements Task {
       }
       return myActivities;
     }
+
+    /*@Override
+    public void setOverAllocatedResources(final boolean areOverallocatedResources) {
+      myCommands.add(new Runnable() {
+        @Override
+        public void run() {
+          TaskImpl.this.setOverallocatedResources(areOverallocatedResources);
+        }
+      });
+    }*/
 
     @Override
     public void setName(final String name) {

@@ -74,9 +74,9 @@ import java.util.Comparator;
  */
 public class GanttTreeTableModel extends DefaultTreeTableModel implements TableColumnModelListener {
   private static class Icons {
-    static ImageIcon ALERT_TASK_INPROGRESS = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/alert1_16.gif"));
-    static ImageIcon ALERT_TASK_OUTDATED = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/alert2_16.gif"));
-    static ImageIcon OVERALLOCATED_RESOURCES = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/overallocated.gif"));
+    static ImageIcon ALERT_TASK_INPROGRESS = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/alert1_16.gif"), "Task in progress");
+    static ImageIcon ALERT_TASK_OUTDATED = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/alert2_16.gif"), "Task outdated");
+    static ImageIcon OVERALLOCATED_RESOURCES = new ImageIcon(GanttTreeTableModel.class.getResource("/icons/overallocated.gif"), "Overallocated Resources");
   }
   static Predicate<Task> NOT_SUPERTASK = new Predicate<Task>() {
     @Override
@@ -265,6 +265,8 @@ public class GanttTreeTableModel extends DefaultTreeTableModel implements TableC
         break;
       case INFO:
         // TODO(dbarashev): implement alerts some other way
+        /*ResourceAssignment[] tAssign =*/ //t.getOverallocatedResources();
+
         if (1 > 0) {  // TODO
           res = Icons.OVERALLOCATED_RESOURCES;
         } else if (t.getCompletionPercentage() < 100) {
