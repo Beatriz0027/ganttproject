@@ -24,6 +24,7 @@ import net.sourceforge.ganttproject.roles.Role;
 import net.sourceforge.ganttproject.roles.RoleManager;
 import net.sourceforge.ganttproject.roles.RolePersistentID;
 import net.sourceforge.ganttproject.roles.RoleSet;
+import net.sourceforge.ganttproject.language.GanttLanguage;
 
 import org.xml.sax.Attributes;
 
@@ -91,11 +92,25 @@ public class RoleTagHandler  extends AbstractTagHandler {
 
   /** Las a role */
   private void loadRoles(Attributes atts) {
+    GanttLanguage language = GanttLanguage.getInstance();
     String roleName = atts.getValue("name");
     RolePersistentID persistentID = new RolePersistentID(atts.getValue("id"));
     Role existingRole = myRoleSet.findRole(persistentID.getRoleID());
+
+    Role[] allRoles = myRoleSet.getRoles();
+    
     if (existingRole == null) {
+      for (Role curr : allRoles) {
+        if (curr.getName().equals(language.getText("customRole"))) {
+          myRoleSet.deleteRole(curr);
+        }
+      }
+
+      System.err.println("Cached ? " + roleName);
+      //System.err.println("Cached ID " + (persistentID.getRoleID()-1));
+      
       myRoleSet.createRole(roleName, persistentID.getRoleID());
+      myRoleSet.createRole(language.getText("customRole"), persistentID.getRoleID()+2);
     }
   }
 }

@@ -171,8 +171,97 @@ public class RoleManagerImpl implements RoleManager {
     }
   }
 
-  private void createRoleSet() {
+  // Adiciona um role novo a lista de roles existentes.
+  public void addRole(String name) {
     GanttLanguage language = GanttLanguage.getInstance();
+    boolean roleExists = false;
+    Role[] r1 = SOFTWARE_DEVELOPMENT_ROLE_SET.getRoles();
+    Role[] r2 = DEFAULT_ROLE_SET.getRoles();
+    int currlen = 0;
+    
+    //cleanRolesCache(r1);
+
+    for (int i = 0; i < r1.length; i++) {
+      if (r1[i].getName().equals(name)) {
+        roleExists = true;
+      }
+    }
+
+    for (int i = 0; i < r1.length; i++) {
+      deleteDuplicated(r1[i].getName(), r1);
+    }
+    
+    for (int i = 0; i < r1.length; i++) {
+      if (r1[i] != null) {
+        if (i > currlen) {
+          currlen = i;
+        }
+      }
+    }
+
+    if (!roleExists) {
+      SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(name);
+      
+      int temp = 0;
+      Role[] r1s = SOFTWARE_DEVELOPMENT_ROLE_SET.getRoles();
+      for (int i = 0; i < r1s.length; i++) {
+        if (r1s[i].getName().equals(name)) {
+          temp = r1s[i].getID();
+        }
+      }
+
+      System.err.println("Ultimo elemento : " + SOFTWARE_DEVELOPMENT_ROLE_SET.findRole(temp));
+
+      SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(name, temp-1);
+      SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("customRole"), temp);
+    }
+    
+    debugPrints(r1, r2);
+
+  }
+
+  private void deleteDuplicated(String name, Role[] r1) {
+    int max = 0;
+    for (int i = 0; i < r1.length; i++) {
+      if (r1[i].getName().equals(name)) {
+        if (i > max) {
+          max = i;
+        }
+      }
+    }
+
+    for (int i = 0; i < r1.length; i++) {
+      if (r1[i].getName().equals(name)) {
+        if (i < max) {
+          SOFTWARE_DEVELOPMENT_ROLE_SET.deleteRole(r1[i]);
+        }
+      }
+    }
+  }
+
+  private void debugPrints(Role[] r1, Role[] r2) {
+    System.err.println("Aqui comeca a cache.");
+
+    for (int i = 0; i < r1.length; i++) {
+      System.err.println("SRole ["+i+"] : " + r1[i].getName());
+    }
+    for (int i = 0; i < r2.length; i++) {
+      System.err.println("Role ["+i+"] : " + r2[i].getName());
+    }
+  }
+
+  public void cleanRolesCache(Role[] r1) {
+    for (int i = 0; i < r1.length; i++) {
+      SOFTWARE_DEVELOPMENT_ROLE_SET.deleteRole(r1[i]);
+    }
+
+    createRoleSet();
+  }
+
+  public void createRoleSet() {
+    GanttLanguage language = GanttLanguage.getInstance();
+    Role[] rs = SOFTWARE_DEVELOPMENT_ROLE_SET.getRoles();
+    boolean temp = false;
 
     SOFTWARE_DEVELOPMENT_ROLE_SET.clear();
     SOFTWARE_DEVELOPMENT_ROLE_SET.createRole(language.getText("resDeveloper"), 2);
@@ -189,7 +278,6 @@ public class RoleManagerImpl implements RoleManager {
     DEFAULT_ROLE_SET.createRole(language.getText("resUndefined"), 0);
     DEFAULT_ROLE_SET.createRole(language.getText("resProjectManager"), 1);
     DEFAULT_ROLE_SET.setEnabled(true);
-    //System.err.println("ABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: " + DEFAULT_ROLE_SET.getCurrRole());
   }
 
   private void changeRoleSet() {
@@ -204,6 +292,7 @@ public class RoleManagerImpl implements RoleManager {
     SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("resAnalysis"), 8);
     SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("resWebDesigner"), 9);
     SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("resNoSpecificRole"), 10);
+    //SOFTWARE_DEVELOPMENT_ROLE_SET.changeRole(language.getText("customRole"), 11);
     DEFAULT_ROLE_SET.changeRole(language.getText("resUndefined"), 0);
     DEFAULT_ROLE_SET.changeRole(language.getText("resProjectManager"), 1);
   }

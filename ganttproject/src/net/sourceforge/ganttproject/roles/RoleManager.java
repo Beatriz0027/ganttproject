@@ -29,8 +29,12 @@ public interface RoleManager {
 
   public RoleSet[] getRoleSets();
 
+  void addRole(String name);
+
   /** Clear the role list */
   public void clear();
+
+  public void cleanRolesCache(Role[] r1);
 
   /** Return all roles except the default roles */
   // public String [] getRolesShort();
@@ -51,6 +55,8 @@ public interface RoleManager {
   public RoleSet getRoleSet(String rolesetName);
 
   public Role[] getEnabledRoles();
+
+  public void createRoleSet();
 
   public Role getDefaultRole();
 

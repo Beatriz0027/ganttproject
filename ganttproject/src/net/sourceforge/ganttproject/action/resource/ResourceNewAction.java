@@ -61,7 +61,7 @@ public class ResourceNewAction extends ResourceAction {
     final HumanResource resource = getManager().newHumanResource();
     resource.setRole(myRoleManager.getDefaultRole());
     GanttDialogPerson dp = new GanttDialogPerson(getManager().getCustomPropertyManager(), myUIFacade, resource);
-    dp.setVisible(true);
+    dp.setVisible(true, 0);
     if (dp.result()) {
       myUIFacade.getUndoManager().undoableEdit(getLocalizedDescription(), new Runnable() {
         @Override
