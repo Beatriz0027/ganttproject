@@ -339,6 +339,47 @@ public class TaskManagerImpl implements TaskManager {
     return (GanttTask) newTaskBuilder().withId(id).build();
   }
 
+  /*
+   * compare one task assignments with every assigment from every other task
+   */
+  @Override
+  public void overAllocatedTasks() {
+    Task[] tasks = this.getTasks();
+    System.out.println("Total tasks: " + this.getTaskCount());
+    ResourceAssignment[] taskAssignments, nextTaskAssignments;
+
+    // sum <resourceId, totalload>
+    Map<Integer, Float> myMap = new HashMap<Integer, Float>();
+
+    for (int i = 0; i < tasks.length; i++) { // task
+      tasks[i].setOverallocatedResources(false);
+      taskAssignments = tasks[i].getAssignments();
+
+      for (int j = 0; j < taskAssignments.length; j++) { // taskAssignment
+        float load = taskAssignments[j].getLoad();
+        int resourceId = taskAssignments[j].getResource().getId();
+
+        if (myMap.get(resourceId) == null)
+          myMap.put(resourceId, load);
+        else {
+          float newSum = myMap.get(resourceId) + load;
+          myMap.put(resourceId, newSum);
+        }
+      }
+    }
+
+    for (int i = 0; i < tasks.length; i++) { // task
+      taskAssignments = tasks[i].getAssignments();
+
+      for (int j = 0; j < taskAssignments.length; j++) { // taskAssignment
+        int resourceId = taskAssignments[j].getResource().getId();
+        if (myMap.get(resourceId) > 100)
+          tasks[i].setOverallocatedResources(true);
+      }
+    }
+
+  }
+
   @Override
   public TaskBuilder newTaskBuilder() {
     return new TaskBuilder() {

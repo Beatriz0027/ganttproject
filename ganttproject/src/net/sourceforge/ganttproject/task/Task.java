@@ -110,8 +110,6 @@ public interface Task extends MutableTask {
   // main properties
   int getTaskID();
 
-  //boolean getOverallocatedResources();
-
   String getName();
 
   boolean isMilestone();
@@ -146,7 +144,9 @@ public interface Task extends MutableTask {
   // HumanResource[] getAssignedHumanResources();
   ResourceAssignment[] getAssignments();
 
-  void getOverallocatedResources();
+  boolean getOverallocatedResources();
+
+  void setOverallocatedResources(boolean overallocatedResources);
 
   TaskDependencySlice getDependencies();
 

@@ -265,9 +265,10 @@ public class GanttTreeTableModel extends DefaultTreeTableModel implements TableC
         break;
       case INFO:
         // TODO(dbarashev): implement alerts some other way
-        /*ResourceAssignment[] tAssign =*/ //t.getOverallocatedResources();
 
-        if (1 > 0) {  // TODO
+        GanttTask taskO = (GanttTask) tn.getUserObject();
+
+        if (taskO.getOverallocatedResources()) {
           res = Icons.OVERALLOCATED_RESOURCES;
         } else if (t.getCompletionPercentage() < 100) {
           Calendar c = GanttCalendar.getInstance();

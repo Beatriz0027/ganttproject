@@ -475,12 +475,13 @@ public class TaskImpl implements Task {
   }
 
   @Override
-  public void getOverallocatedResources() {
-    ResourceAssignment[] assignments = this.getAssignments();
+  public boolean getOverallocatedResources() {
+    return areOverallocatedResources;
+  }
 
-    for (int i = 0; i < assignments.length; i++) {
-      System.out.println(assignments[i].getLoad());
-    }
+  @Override
+  public void setOverallocatedResources(boolean areOverallocatedResources) {
+    this.areOverallocatedResources = areOverallocatedResources;
   }
 
   @Override
@@ -695,16 +696,6 @@ public class TaskImpl implements Task {
       }
       return myActivities;
     }
-
-    /*@Override
-    public void setOverAllocatedResources(final boolean areOverallocatedResources) {
-      myCommands.add(new Runnable() {
-        @Override
-        public void run() {
-          TaskImpl.this.setOverallocatedResources(areOverallocatedResources);
-        }
-      });
-    }*/
 
     @Override
     public void setName(final String name) {

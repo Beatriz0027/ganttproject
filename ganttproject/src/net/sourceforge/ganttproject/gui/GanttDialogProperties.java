@@ -50,6 +50,7 @@ public class GanttDialogProperties {
             taskPropertiesBean.applySettings();
             try {
               project.getTaskManager().getAlgorithmCollection().getRecalculateTaskScheduleAlgorithm().run();
+              project.getTaskManager().overAllocatedTasks();
             } catch (TaskDependencyException e) {
               if (!GPLogger.log(e)) {
                 e.printStackTrace();
